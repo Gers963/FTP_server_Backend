@@ -12,7 +12,7 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 
 mongoose.set('useFindAndModify', false);
-mongoose.connect('mongodb+srv://dev:1234@cluster0-awdga.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://user:1234@serverftp-fyf07.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

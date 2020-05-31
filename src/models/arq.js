@@ -4,6 +4,7 @@ const fileSchema = new mongoose.Schema({
     name: String,
     size: Number,
     key: String,
+    arquivo: String,
     createdAt: {
         type: Date,
         default: Date.now

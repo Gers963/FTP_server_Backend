@@ -8,7 +8,8 @@ routes.post('/add/file', multer(multerConfig).single('file'), async (req, res) =
     const post = await arq.create({
         name: req.file.originalname,
         size: req.file.size,
-        key: req.file.filename
+        key: req.file.filename,
+        arquivo: req.body.imagem
     })
     return res.json(post);
 });
@@ -48,14 +49,30 @@ routes.delete('/delet/file/:key', async (req, res) => {
     }
 });
 
-routes.get('/get/file/:key', async (req, res) => {
+routes.get('/get/file/:id', async (req, res) => {
     try {
-        arq.findOne({ key: req.params.key })
+        arq.findOne({ _id: req.params.id })
             .then(resp => {
-                fs.unlink(`uploads/${req.params.key}`, function (err) {
-                    if (err) throw err;
-                });
-                return res.send({ msg: "Removido com sucesso" })
+                return res.send(resp)
+            })
+            .catch(err => {
+                return res.send({ msg: "./pages/view-files" })
+            })
+    } catch (error) {
+        return res.status(500).send({
+            status: false,
+            msg: 'Error performing request',
+            error: err
+        });
+    }
+});
+
+routes.post('/update/file/:id', async (req, res) => {
+    try {
+        var query = {_id: req.params.id}
+        arq.findOneAndUpdate(query, { name: req.headers.name })
+            .then(resp => {
+                return res.send({ msg: "./pages/view-files" })
             })
             .catch(err => {
                 console.log(err)
@@ -69,5 +86,6 @@ routes.get('/get/file/:key', async (req, res) => {
         });
     }
 });
+
 
 module.exports = routes;
