@@ -20,5 +20,6 @@ app.use(morgan('dev'));
 
 
 app.use(require('./routes'));
+app.use(require('./Auth'));
 
 server.listen(process.env.PORT || 3000);
