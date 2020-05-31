@@ -9,7 +9,8 @@ routes.post('/add/file', multer(multerConfig).single('file'), async (req, res) =
         name: req.file.originalname,
         size: req.file.size,
         key: req.file.filename,
-        arquivo: req.body.imagem
+        arquivo: req.body.imagem,
+        userId: req.body.token
     })
     return res.json(post);
 });
@@ -18,9 +19,9 @@ routes.get('/download/file/:file', async (req, res) => {
     res.download(`./uploads/${req.params.file}`)
 });
 
-routes.get("/list/file", async (req, res) => {
+routes.get("/list/file/:id", async (req, res) => {
     try {
-        const files = await arq.find();
+        const files = await arq.find({ userId: req.params.id });
         return res.send({ files });
     } catch (error) {
         res.status(400).send({ error: "failed get files" });
@@ -30,10 +31,7 @@ routes.get("/list/file", async (req, res) => {
 routes.delete('/delet/file/:key', async (req, res) => {
     try {
         arq.findOneAndDelete({ key: req.params.key })
-            .then(resp => {
-                fs.unlink(`uploads/${req.params.key}`, function (err) {
-                    if (err) throw err;
-                });
+            .then(resp => {                
                 return res.send({ msg: "Removido com sucesso" })
             })
             .catch(err => {
